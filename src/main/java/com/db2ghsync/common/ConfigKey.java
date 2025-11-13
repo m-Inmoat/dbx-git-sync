@@ -8,6 +8,12 @@ import lombok.Getter;
  */
 @Getter
 public enum ConfigKey {
+    /** Dropbox APIリフレッシュトークン */
+    DROPBOX_REFRESH_TOKEN("dropbox.refresh.token"),
+    /** Dropbox APIクライアントID */
+    DROPBOX_CLIENT_ID("dropbox.client.id"),
+    /** Dropbox APIクライアントシークレット */
+    DROPBOX_CLIENT_SECRET("dropbox.client.secret"),
 
     /** Dropbox APIアクセストークン */
     DROPBOX_ACCESS_TOKEN("dropbox.access.token"),

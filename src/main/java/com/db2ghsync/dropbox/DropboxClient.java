@@ -20,6 +20,7 @@ import com.db2ghsync.entity.SyncEntry;
 import com.db2ghsync.exception.DropboxSyncException;
 import com.dropbox.core.DbxException;
 import com.dropbox.core.DbxRequestConfig;
+import com.dropbox.core.oauth.DbxCredential;
 import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.ListFolderResult;
 import com.dropbox.core.v2.files.Metadata;
@@ -48,13 +49,25 @@ public class DropboxClient {
      */
     public DropboxClient() {
 
-        logger.info("Initializing Dropbox client");
         DbxRequestConfig config = DbxRequestConfig.newBuilder("db2ghsync-app").build();
-        this.client = new DbxClientV2(config, ConfigManager.getProperty(ConfigKey.DROPBOX_ACCESS_TOKEN));
+        String refreshToken = ConfigManager.getProperty(ConfigKey.DROPBOX_REFRESH_TOKEN);
+        String clientId = ConfigManager.getProperty(ConfigKey.DROPBOX_CLIENT_ID);
+        String clientSecret = ConfigManager.getProperty(ConfigKey.DROPBOX_CLIENT_SECRET);
+        String accessToken = ConfigManager.getProperty(ConfigKey.DROPBOX_ACCESS_TOKEN);
+
+        if (!refreshToken.isEmpty() && !clientId.isEmpty() && !clientSecret.isEmpty()) {
+            DbxCredential credential = new DbxCredential(
+                    "",
+                    -1L,
+                    refreshToken,
+                    clientId,
+                    clientSecret);
+            this.client = new DbxClientV2(config, credential);
+        } else {
+            this.client = new DbxClientV2(config, accessToken);
+        }
         this.extensions = Arrays.asList(ConfigManager.getProperty(ConfigKey.TARGET_FILE_EXTENSIONS).split(","));
         this.directories = Arrays.asList(ConfigManager.getProperty(ConfigKey.TARGET_DIRECTORIES).split(","));
-        logger.info("Dropbox client initialized. Target extensions: {}, Target directories: {}", extensions,
-                directories);
     }
 
     /**

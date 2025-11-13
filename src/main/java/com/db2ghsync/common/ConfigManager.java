@@ -84,8 +84,14 @@ public class ConfigManager {
     private static Map<ConfigKey, String> asMap(Properties confProperties) {
 
         Map<ConfigKey, String> map = new HashMap<>();
+        // Dropbox認証情報（refresh token関連はオプション）
+        map.put(ConfigKey.DROPBOX_REFRESH_TOKEN,
+                confProperties.getProperty(ConfigKey.DROPBOX_REFRESH_TOKEN.getKey(), ""));
+        map.put(ConfigKey.DROPBOX_CLIENT_ID, confProperties.getProperty(ConfigKey.DROPBOX_CLIENT_ID.getKey(), ""));
+        map.put(ConfigKey.DROPBOX_CLIENT_SECRET,
+                confProperties.getProperty(ConfigKey.DROPBOX_CLIENT_SECRET.getKey(), ""));
         map.put(ConfigKey.DROPBOX_ACCESS_TOKEN,
-                getRequiredProperty(confProperties, ConfigKey.DROPBOX_ACCESS_TOKEN.getKey()));
+                confProperties.getProperty(ConfigKey.DROPBOX_ACCESS_TOKEN.getKey(), ""));
         map.put(ConfigKey.GITHUB_PAT, getRequiredProperty(confProperties, ConfigKey.GITHUB_PAT.getKey()));
         map.put(ConfigKey.GITHUB_USERNAME, getRequiredProperty(confProperties, ConfigKey.GITHUB_USERNAME.getKey()));
         map.put(ConfigKey.GITHUB_REMOTE_URL, getRequiredProperty(confProperties, ConfigKey.GITHUB_REMOTE_URL.getKey()));

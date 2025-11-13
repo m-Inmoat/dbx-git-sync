@@ -1,4 +1,9 @@
-# Dropbox APIアクセストークン(sl.xxxxxxxxxxxxxxxx...)
+# Dropbox refresh token認証
+dropbox.refresh.token=
+dropbox.client.id=
+dropbox.client.secret=
+
+# Dropbox access token認証
 dropbox.access.token=
 
 # GitHub Personal Access Token
