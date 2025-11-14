@@ -26,7 +26,7 @@ Linux環境では動作未検証。
 	```
 	例：
 	```cmd
-	java -cp build/libs/dbx-git-sync.jar com.db2ghsync.DropboxGitSyncApplication C:/tmp/config/config.properties
+	java build/libs/dbx-git-sync.jar C:/tmp/config/config.properties
 	```
 
 ## 設定ファイル例
