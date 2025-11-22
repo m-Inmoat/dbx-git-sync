@@ -80,11 +80,11 @@ public final class AppConfig {
     }
 
     public List<String> getTargetFileExtensions() {
-        return new java.util.ArrayList<>(targetFileExtensions);
+        return targetFileExtensions;
     }
 
     public List<String> getTargetDirectories() {
-        return Collections.unmodifiableList(List.copyOf(targetDirectories));
+        return targetDirectories;
     }
 
     public String getSyncTargetDir() {

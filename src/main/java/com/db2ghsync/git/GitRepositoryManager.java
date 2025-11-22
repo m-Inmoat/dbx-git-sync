@@ -21,6 +21,7 @@ import org.eclipse.jgit.api.errors.NoFilepatternException;
 import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
@@ -276,14 +277,15 @@ public class GitRepositoryManager implements GitService {
         
         Set<String> changedFiles = new HashSet<>();
 
-        try (RevWalk revWalk = new RevWalk(git.getRepository())) {
+        try (RevWalk revWalk = new RevWalk(git.getRepository());
+             ObjectReader reader = git.getRepository().newObjectReader()) {
             RevCommit oldCommit = oldCommitId != null ? revWalk.parseCommit(oldCommitId) : null;
             RevCommit newCommit = newCommitId != null ? revWalk.parseCommit(newCommitId) : null;
 
             AbstractTreeIterator oldTreeIterator = (oldCommit != null)
-                    ? prepareTreeParser(git, oldCommit)
+                    ? prepareTreeParser(reader, oldCommit)
                     : new EmptyTreeIterator();
-            AbstractTreeIterator newTreeIterator = prepareTreeParser(git, newCommit);
+            AbstractTreeIterator newTreeIterator = prepareTreeParser(reader, newCommit);
 
             List<DiffEntry> diffs = git.diff()
                     .setOldTree(oldTreeIterator)
@@ -309,12 +311,9 @@ public class GitRepositoryManager implements GitService {
         return changedFiles;
     }
 
-    private AbstractTreeIterator prepareTreeParser(Git git, RevCommit commit) throws IOException {
-        try (RevWalk walk = new RevWalk(git.getRepository())) {
-            CanonicalTreeParser treeParser = new CanonicalTreeParser();
-            treeParser.reset(git.getRepository().newObjectReader(), commit.getTree());
-            walk.dispose();
-            return treeParser;
-        }
+    private AbstractTreeIterator prepareTreeParser(ObjectReader reader, RevCommit commit) throws IOException {
+        CanonicalTreeParser treeParser = new CanonicalTreeParser();
+        treeParser.reset(reader, commit.getTree());
+        return treeParser;
     }
 }
