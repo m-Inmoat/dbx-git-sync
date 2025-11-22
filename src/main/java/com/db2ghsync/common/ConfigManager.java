@@ -213,7 +213,7 @@ public class ConfigManager {
 
         String val = props.getProperty(key);
 
-        if (Objects.isNull(val) || "".equals(val)) {
+        if (Objects.isNull(val) || val.isEmpty()) {
             throw new IllegalArgumentException("Required property is missing: " + key);
         }
 
